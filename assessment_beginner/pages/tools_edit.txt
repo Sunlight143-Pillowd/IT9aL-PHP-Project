@@ -1,0 +1,48 @@
+<?php
+include "../db.php";
+$id = $_GET['id'];
+
+$get = mysqli_query($conn, "SELECT * FROM tools WHERE tool_id = $id");
+$row = mysqli_fetch_assoc($get);
+
+if (isset($_POST['update'])) {
+    $tool_name = $_POST['tool_name'];
+    $quantity_total = $_POST['quantity_total'];
+    $quantity_available = $_POST['quantity_available'];
+
+    mysqli_query($conn, "UPDATE tools
+        SET tool_name='$tool_name', quantity_total='$quantity_total', quantity_available='$quantity_available'
+        WHERE tool_id=$id");
+
+    header("Location: tools_list.php");
+    exit;
+}
+?>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Tools</title>
+</head>
+<body>
+    <?php include "../nav.php"; ?>
+    <h1>Edit Tools</h1>
+    <p>This is the edit tools page.</p>
+
+    <form method="post" action="tools_edit.php">
+        <input type="hidden" name="id" value="<?php echo $id; ?>">
+        <label for="tool_name">Tool Name:</label><br>
+        <input type="text" id="tool_name" name="tool_name" value="<?php echo $row['tool_name']; ?>" required><br><br>
+
+        <label for="quantity_total">Quantity Total:</label><br>
+        <input type="number" id="quantity_total" name="quantity_total" value="<?php echo $row['quantity_total']; ?>" required><br><br>
+
+        <label for="quantity_available">Quantity Available:</label><br>
+        <input type="number" id="quantity_available" name="quantity_available" value="<?php echo $row['quantity_available']; ?>" required><br><br>
+
+        <input type="submit" value="Update Tool">
+    </form>
+</body>
+</html>
